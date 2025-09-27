@@ -12,6 +12,11 @@ categories = ["text-processing", "internationalization", "no-std"]
 keywords = ["hyphenation", "syllables"]
 exclude = ["patterns/*"]
 
+[[bin]]
+name = "hypher"
+path = "src/main.rs"
+required-features = ["bin"]
+
 [features]
 default = ["alloc", "full"]
 alloc = []
@@ -87,6 +92,15 @@ swedish = []
 turkish = []
 turkmen = []
 ukrainian = []
+dyn = []
+build = []
+bin = ["clap", "build", "dyn"]
+
+[dependencies]
+clap = { version = "4.5.48", features = ["derive"], optional = true }
+
+[dev-dependencies]
+hypher = { path = "../hypher", features = ["build", "alloc"] }
 
 [workspace]
 members = ["bench"]

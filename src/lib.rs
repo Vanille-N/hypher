@@ -51,7 +51,7 @@ hypher = { version = "0.1", default-features = false, features = ["english", "gr
 ```
 */
 
-#![no_std]
+#![cfg_attr(not(any(feature = "build", test)), no_std)]
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
@@ -61,6 +61,10 @@ extern crate alloc;
 use core::fmt::{self, Debug, Formatter};
 use core::iter::FusedIterator;
 use core::num::NonZeroU8;
+
+/// Utilities to compile a trie.
+#[cfg(any(feature = "build", test))]
+pub mod builder;
 
 // Include language data.
 include!("lang.rs");
@@ -85,7 +89,7 @@ include!("lang.rs");
 /// assert_eq!(syllables.next(), None);
 /// # assert_eq!(syllables.next(), None);
 /// ```
-pub fn hyphenate(word: &str, lang: Lang) -> Syllables<'_> {
+pub fn hyphenate<'a>(word: &'a str, lang: Lang<'a>) -> Syllables<'a> {
     let (left_min, right_min) = lang.bounds();
     hyphenate_bounded(word, lang, left_min, right_min)
 }
@@ -109,12 +113,12 @@ pub fn hyphenate(word: &str, lang: Lang) -> Syllables<'_> {
 /// assert_eq!(syllables.next(), Some("sive"));
 /// assert_eq!(syllables.next(), None);
 /// ```
-pub fn hyphenate_bounded(
-    word: &str,
-    lang: Lang,
+pub fn hyphenate_bounded<'a>(
+    word: &'a str,
+    lang: Lang<'a>,
     left_min: usize,
     right_min: usize,
-) -> Syllables<'_> {
+) -> Syllables<'a> {
     // Initialize the trie state for the language.
     let root = lang.root();
 
