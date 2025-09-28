@@ -50,7 +50,8 @@ fn generate_code() {
     let mut fresh = true;
     for (_, iso, _, _, filename, ..) in languages {
         let source = Path::new("patterns").join(filename);
-        let trie = hypher::builder::build_trie(&source).unwrap();
+        let tex = fs::read_to_string(&source).unwrap();
+        let trie = hypher::builder::build_trie(&tex);
         let path = format!("tries/{iso}.bin");
         fresh &= write_check(&path, trie);
     }
@@ -153,7 +154,10 @@ fn write_lang(
     // Implement dynamic loading
     writeln!(w, "    /// Dynamically load new patterns.")?;
     writeln!(w, "    #[cfg(feature = \"dyn\")]")?;
-    writeln!(w, "    pub fn from_bytes(bounds: (usize, usize), bytes: &'a [u8]) -> Self {{")?;
+    writeln!(
+        w,
+        "    pub fn from_bytes(bounds: (usize, usize), bytes: &'a [u8]) -> Self {{"
+    )?;
     writeln!(w, "        Self::Dyn {{ bounds, bytes }}")?;
     writeln!(w, "    }}")?;
     writeln!(w)?;
@@ -201,4 +205,3 @@ fn write_lang(
 fn write_cfg(w: &mut String, feature: &str) -> fmt::Result {
     writeln!(w, r#"#[cfg(feature = "{feature}")]"#)
 }
-

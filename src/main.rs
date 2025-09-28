@@ -35,7 +35,8 @@ enum Command {
 }
 
 fn build_trie(source: &Path, dest: &Path) -> Result<(), Box<dyn Error>> {
-    let trie = hypher::builder::build_trie(source)?;
+    let tex = fs::read_to_string(&source)?;
+    let trie = hypher::builder::build_trie(&tex);
     fs::write(dest, &trie)?;
     Ok(())
 }
