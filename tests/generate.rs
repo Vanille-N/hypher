@@ -50,7 +50,7 @@ fn generate_code() {
     let mut fresh = true;
     for (_, iso, _, _, filename, ..) in languages {
         let source = Path::new("patterns").join(filename);
-        let trie = hypher::builder::build_trie(&source);
+        let trie = hypher::builder::build_trie(&source).unwrap();
         let path = format!("tries/{iso}.bin");
         fresh &= write_check(&path, trie);
     }

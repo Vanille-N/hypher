@@ -1,16 +1,16 @@
-///! This module implements compilation of a trie from a pattern file.
-
-use std::path::Path;
 use std::collections::HashMap;
 use std::fs;
+use std::io;
+///! This module implements compilation of a trie from a pattern file.
+use std::path::Path;
 
 /// Generate an encoded tree from a source file.
-pub fn build_trie(source: &Path) -> Vec<u8> {
-    let tex = fs::read_to_string(source).unwrap();
+pub fn build_trie(source: &Path) -> Result<Vec<u8>, io::Error> {
+    let tex = fs::read_to_string(source)?;
     let mut builder = TrieBuilder::new();
     parse(&tex, |pat| builder.insert(pat));
     builder.compress();
-    builder.encode()
+    Ok(builder.encode())
 }
 
 /// Parse a TeX pattern file, calling `f` with each pattern.
