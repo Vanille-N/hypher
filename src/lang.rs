@@ -17,109 +17,109 @@ struct Absurd<'a>(PhantomData<&'a ()>);
 #[non_exhaustive]
 #[allow(private_interfaces)]
 pub enum Lang<'a> {
-    /// Hyphenation for _Afrikaans._ (Code: `af`, Script, `Latn`, Feature: `afrikaans`)
+    /// Hyphenation for _Afrikaans._ (Code: `af`, Script: `Latn`, Feature: `afrikaans`)
     #[cfg(feature = "afrikaans")]
     Afrikaans,
-    /// Hyphenation for _Albanian._ (Code: `sq`, Script, `Latn`, Feature: `albanian`)
+    /// Hyphenation for _Albanian._ (Code: `sq`, Script: `Latn`, Feature: `albanian`)
     #[cfg(feature = "albanian")]
     Albanian,
-    /// Hyphenation for _Belarusian._ (Code: `be`, Script, `Cyrl`, Feature: `belarusian`)
+    /// Hyphenation for _Belarusian._ (Code: `be`, Script: `Cyrl`, Feature: `belarusian`)
     #[cfg(feature = "belarusian")]
     Belarusian,
-    /// Hyphenation for _Bulgarian._ (Code: `bg`, Script, `Cyrl`, Feature: `bulgarian`)
+    /// Hyphenation for _Bulgarian._ (Code: `bg`, Script: `Cyrl`, Feature: `bulgarian`)
     #[cfg(feature = "bulgarian")]
     Bulgarian,
-    /// Hyphenation for _Catalan._ (Code: `ca`, Script, `Latn`, Feature: `catalan`)
+    /// Hyphenation for _Catalan._ (Code: `ca`, Script: `Latn`, Feature: `catalan`)
     #[cfg(feature = "catalan")]
     Catalan,
-    /// Hyphenation for _Croatian._ (Code: `hr`, Script, `Latn`, Feature: `croatian`)
+    /// Hyphenation for _Croatian._ (Code: `hr`, Script: `Latn`, Feature: `croatian`)
     #[cfg(feature = "croatian")]
     Croatian,
-    /// Hyphenation for _Czech._ (Code: `cs`, Script, `Latn`, Feature: `czech`)
+    /// Hyphenation for _Czech._ (Code: `cs`, Script: `Latn`, Feature: `czech`)
     #[cfg(feature = "czech")]
     Czech,
-    /// Hyphenation for _Danish._ (Code: `da`, Script, `Latn`, Feature: `danish`)
+    /// Hyphenation for _Danish._ (Code: `da`, Script: `Latn`, Feature: `danish`)
     #[cfg(feature = "danish")]
     Danish,
-    /// Hyphenation for _Dutch._ (Code: `nl`, Script, `Latn`, Feature: `dutch`)
+    /// Hyphenation for _Dutch._ (Code: `nl`, Script: `Latn`, Feature: `dutch`)
     #[cfg(feature = "dutch")]
     Dutch,
-    /// Hyphenation for _English._ (Code: `en`, Script, `Latn`, Feature: `english`)
+    /// Hyphenation for _English._ (Code: `en`, Script: `Latn`, Feature: `english`)
     #[cfg(feature = "english")]
     English,
-    /// Hyphenation for _Estonian._ (Code: `et`, Script, `Latn`, Feature: `estonian`)
+    /// Hyphenation for _Estonian._ (Code: `et`, Script: `Latn`, Feature: `estonian`)
     #[cfg(feature = "estonian")]
     Estonian,
-    /// Hyphenation for _Finnish._ (Code: `fi`, Script, `Latn`, Feature: `finnish`)
+    /// Hyphenation for _Finnish._ (Code: `fi`, Script: `Latn`, Feature: `finnish`)
     #[cfg(feature = "finnish")]
     Finnish,
-    /// Hyphenation for _French._ (Code: `fr`, Script, `Latn`, Feature: `french`)
+    /// Hyphenation for _French._ (Code: `fr`, Script: `Latn`, Feature: `french`)
     #[cfg(feature = "french")]
     French,
-    /// Hyphenation for _Georgian._ (Code: `ka`, Script, `Geor`, Feature: `georgian`)
+    /// Hyphenation for _Georgian._ (Code: `ka`, Script: `Geor`, Feature: `georgian`)
     #[cfg(feature = "georgian")]
     Georgian,
-    /// Hyphenation for _German._ (Code: `de`, Script, `Latn`, Feature: `german`)
+    /// Hyphenation for _German._ (Code: `de`, Script: `Latn`, Feature: `german`)
     #[cfg(feature = "german")]
     German,
-    /// Hyphenation for _Greek._ (Code: `el`, Script, `Grek`, Feature: `greek`)
+    /// Hyphenation for _Greek._ (Code: `el`, Script: `Grek`, Feature: `greek`)
     #[cfg(feature = "greek")]
     Greek,
-    /// Hyphenation for _Hungarian._ (Code: `hu`, Script, `Latn`, Feature: `hungarian`)
+    /// Hyphenation for _Hungarian._ (Code: `hu`, Script: `Latn`, Feature: `hungarian`)
     #[cfg(feature = "hungarian")]
     Hungarian,
-    /// Hyphenation for _Icelandic._ (Code: `is`, Script, `Latn`, Feature: `icelandic`)
+    /// Hyphenation for _Icelandic._ (Code: `is`, Script: `Latn`, Feature: `icelandic`)
     #[cfg(feature = "icelandic")]
     Icelandic,
-    /// Hyphenation for _Italian._ (Code: `it`, Script, `Latn`, Feature: `italian`)
+    /// Hyphenation for _Italian._ (Code: `it`, Script: `Latn`, Feature: `italian`)
     #[cfg(feature = "italian")]
     Italian,
-    /// Hyphenation for _Kurmanji._ (Code: `ku`, Script, `Latn`, Feature: `kurmanji`)
+    /// Hyphenation for _Kurmanji._ (Code: `ku`, Script: `Latn`, Feature: `kurmanji`)
     #[cfg(feature = "kurmanji")]
     Kurmanji,
-    /// Hyphenation for _Latin._ (Code: `la`, Script, `Latn`, Feature: `latin`)
+    /// Hyphenation for _Latin._ (Code: `la`, Script: `Latn`, Feature: `latin`)
     #[cfg(feature = "latin")]
     Latin,
-    /// Hyphenation for _Lithuanian._ (Code: `lt`, Script, `Latn`, Feature: `lithuanian`)
+    /// Hyphenation for _Lithuanian._ (Code: `lt`, Script: `Latn`, Feature: `lithuanian`)
     #[cfg(feature = "lithuanian")]
     Lithuanian,
-    /// Hyphenation for _Mongolian._ (Code: `mn`, Script, `Cyrl`, Feature: `mongolian`)
+    /// Hyphenation for _Mongolian._ (Code: `mn`, Script: `Cyrl`, Feature: `mongolian`)
     #[cfg(feature = "mongolian")]
     Mongolian,
-    /// Hyphenation for _Norwegian._ (Code: `no`, Alias: `nb`, Alias: `nn`, Script, `Latn`, Feature: `norwegian`)
+    /// Hyphenation for _Norwegian._ (Code: `no`, Alias: `nb`, Alias: `nn`, Script: `Latn`, Feature: `norwegian`)
     #[cfg(feature = "norwegian")]
     Norwegian,
-    /// Hyphenation for _Polish._ (Code: `pl`, Script, `Latn`, Feature: `polish`)
+    /// Hyphenation for _Polish._ (Code: `pl`, Script: `Latn`, Feature: `polish`)
     #[cfg(feature = "polish")]
     Polish,
-    /// Hyphenation for _Portuguese._ (Code: `pt`, Script, `Latn`, Feature: `portuguese`)
+    /// Hyphenation for _Portuguese._ (Code: `pt`, Script: `Latn`, Feature: `portuguese`)
     #[cfg(feature = "portuguese")]
     Portuguese,
-    /// Hyphenation for _Russian._ (Code: `ru`, Script, `Cyrl`, Feature: `russian`)
+    /// Hyphenation for _Russian._ (Code: `ru`, Script: `Cyrl`, Feature: `russian`)
     #[cfg(feature = "russian")]
     Russian,
-    /// Hyphenation for _Serbian._ (Code: `sr`, Script, `Cyrl`, Feature: `serbian`)
+    /// Hyphenation for _Serbian._ (Code: `sr`, Script: `Cyrl`, Feature: `serbian`)
     #[cfg(feature = "serbian")]
     Serbian,
-    /// Hyphenation for _Slovak._ (Code: `sk`, Script, `Latn`, Feature: `slovak`)
+    /// Hyphenation for _Slovak._ (Code: `sk`, Script: `Latn`, Feature: `slovak`)
     #[cfg(feature = "slovak")]
     Slovak,
-    /// Hyphenation for _Slovenian._ (Code: `sl`, Script, `Latn`, Feature: `slovenian`)
+    /// Hyphenation for _Slovenian._ (Code: `sl`, Script: `Latn`, Feature: `slovenian`)
     #[cfg(feature = "slovenian")]
     Slovenian,
-    /// Hyphenation for _Spanish._ (Code: `es`, Script, `Latn`, Feature: `spanish`)
+    /// Hyphenation for _Spanish._ (Code: `es`, Script: `Latn`, Feature: `spanish`)
     #[cfg(feature = "spanish")]
     Spanish,
-    /// Hyphenation for _Swedish._ (Code: `sv`, Script, `Latn`, Feature: `swedish`)
+    /// Hyphenation for _Swedish._ (Code: `sv`, Script: `Latn`, Feature: `swedish`)
     #[cfg(feature = "swedish")]
     Swedish,
-    /// Hyphenation for _Turkish._ (Code: `tr`, Script, `Latn`, Feature: `turkish`)
+    /// Hyphenation for _Turkish._ (Code: `tr`, Script: `Latn`, Feature: `turkish`)
     #[cfg(feature = "turkish")]
     Turkish,
-    /// Hyphenation for _Turkmen._ (Code: `tk`, Script, `Latn`, Feature: `turkmen`)
+    /// Hyphenation for _Turkmen._ (Code: `tk`, Script: `Latn`, Feature: `turkmen`)
     #[cfg(feature = "turkmen")]
     Turkmen,
-    /// Hyphenation for _Ukrainian._ (Code: `uk`, Script, `Cyrl`, Feature: `ukrainian`)
+    /// Hyphenation for _Ukrainian._ (Code: `uk`, Script: `Cyrl`, Feature: `ukrainian`)
     #[cfg(feature = "ukrainian")]
     Ukrainian,
     /// Dynamically loaded patterns.
@@ -130,7 +130,8 @@ pub enum Lang<'a> {
         /// See method `root`.
         bytes: &'a [u8],
     },
-    /// Cannot be constructed. Silences the unused lifetime warning.
+    /// Cannot be constructed.
+    /// Silences the unused lifetime warning.
     #[cfg(not(feature = "dyn"))]
     Absurd(Absurd<'a>),
 }
@@ -220,8 +221,16 @@ impl Lang<'static> {
 
 impl<'a> Lang<'a> {
     /// Dynamically load new patterns.
+    /// No validation will occur here: if you provide a malformed
+    /// automata the program might panic when you try to use it.
     #[cfg(feature = "dyn")]
-    pub fn from_bytes(bounds: (usize, usize), bytes: &'a [u8]) -> Self {
+    pub fn from_bytes(
+        /// (left,right)-hyphenmin of the language.
+        bounds: (usize, usize),
+        /// Pass to this the output of `hypher::builder::build_trie`
+        /// or an equivalently obtained well-formed trie.
+        bytes: &'a [u8],
+    ) -> Self {
         Self::Dyn { bounds, bytes }
     }
 
@@ -308,6 +317,7 @@ impl<'a> Lang<'a> {
         }
     }
 
+    /// Entry point of the automata.
     fn root(self) -> State<'a> {
         match self {
             #[cfg(feature = "afrikaans")]

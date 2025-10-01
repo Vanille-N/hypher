@@ -4,52 +4,79 @@ use std::fmt::{self, Write};
 use std::fs;
 use std::path::Path;
 
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
+struct Language {
+    name: &'static str,
+    feature: String,
+    iso: &'static str,
+    aliases: Vec<&'static str>,
+    isos: Vec<&'static str>,
+    script: &'static str,
+    tex_file: &'static str,
+    lmin: u8,
+    rmin: u8,
+}
+
+const LANGS: [(&str, &str, &[&str], &str, &str, u8, u8); 35] = [
+    ("Afrikaans", "af", &[], "Latn", "hyph-af.tex", 1, 2),
+    ("Belarusian", "be", &[], "Cyrl", "hyph-be.tex", 2, 2),
+    ("Bulgarian", "bg", &[], "Cyrl", "hyph-bg.tex", 2, 2),
+    ("Catalan", "ca", &[], "Latn", "hyph-ca.tex", 2, 2),
+    ("Czech", "cs", &[], "Latn", "hyph-cs-sojka.tex", 2, 2),
+    ("Danish", "da", &[], "Latn", "hyph-da.tex", 2, 2),
+    ("German", "de", &[], "Latn", "hyph-de-1996.tex", 2, 2),
+    ("Greek", "el", &[], "Grek", "hyph-el-monoton.tex", 1, 1),
+    ("English", "en", &[], "Latn", "hyph-en-us.tex", 2, 3),
+    ("Spanish", "es", &[], "Latn", "hyph-es.tex", 2, 2),
+    ("Estonian", "et", &[], "Latn", "hyph-et.tex", 2, 3),
+    ("Finnish", "fi", &[], "Latn", "hyph-fi.tex", 2, 2),
+    ("French", "fr", &[], "Latn", "hyph-fr.tex", 2, 2),
+    ("Croatian", "hr", &[], "Latn", "hyph-hr.tex", 2, 2),
+    ("Hungarian", "hu", &[], "Latn", "hyph-hu.tex", 2, 2),
+    ("Icelandic", "is", &[], "Latn", "hyph-is.tex", 2, 2),
+    ("Italian", "it", &[], "Latn", "hyph-it.tex", 2, 2),
+    ("Georgian", "ka", &[], "Geor", "hyph-ka.tex", 1, 2),
+    ("Kurmanji", "ku", &[], "Latn", "hyph-kmr.tex", 2, 2),
+    ("Latin", "la", &[], "Latn", "hyph-la.tex", 2, 2),
+    ("Lithuanian", "lt", &[], "Latn", "hyph-lt.tex", 2, 2),
+    ("Mongolian", "mn", &[], "Cyrl", "hyph-mn.tex", 2, 2),
+    ("Dutch", "nl", &[], "Latn", "hyph-nl.tex", 2, 2),
+    ("Norwegian", "no", &["nb", "nn"], "Latn", "hyph-no.tex", 2, 2),
+    ("Polish", "pl", &[], "Latn", "hyph-pl.tex", 2, 2),
+    ("Portuguese", "pt", &[], "Latn", "hyph-pt.tex", 2, 3),
+    ("Russian", "ru", &[], "Cyrl", "hyph-ru.tex", 2, 2),
+    ("Serbian", "sr", &[], "Cyrl", "hyph-sh-cyrl.tex", 2, 2),
+    ("Slovak", "sk", &[], "Latn", "hyph-sk.tex", 2, 3),
+    ("Slovenian", "sl", &[], "Latn", "hyph-sl.tex", 2, 2),
+    ("Albanian", "sq", &[], "Latn", "hyph-sq.tex", 2, 2),
+    ("Swedish", "sv", &[], "Latn", "hyph-sv.tex", 2, 2),
+    ("Turkmen", "tk", &[], "Latn", "hyph-tk.tex", 2, 2),
+    ("Turkish", "tr", &[], "Latn", "hyph-tr.tex", 2, 2),
+    ("Ukrainian", "uk", &[], "Cyrl", "hyph-uk.tex", 2, 2),
+];
+
 #[test]
 fn generate_code() {
-    let mut languages: [(&str, &str, &[&str], &str, &str, u8, u8); 35] = [
-        ("Afrikaans", "af", &[], "Latn", "hyph-af.tex", 1, 2),
-        ("Belarusian", "be", &[], "Cyrl", "hyph-be.tex", 2, 2),
-        ("Bulgarian", "bg", &[], "Cyrl", "hyph-bg.tex", 2, 2),
-        ("Catalan", "ca", &[], "Latn", "hyph-ca.tex", 2, 2),
-        ("Czech", "cs", &[], "Latn", "hyph-cs-sojka.tex", 2, 2),
-        ("Danish", "da", &[], "Latn", "hyph-da.tex", 2, 2),
-        ("German", "de", &[], "Latn", "hyph-de-1996.tex", 2, 2),
-        ("Greek", "el", &[], "Grek", "hyph-el-monoton.tex", 1, 1),
-        ("English", "en", &[], "Latn", "hyph-en-us.tex", 2, 3),
-        ("Spanish", "es", &[], "Latn", "hyph-es.tex", 2, 2),
-        ("Estonian", "et", &[], "Latn", "hyph-et.tex", 2, 3),
-        ("Finnish", "fi", &[], "Latn", "hyph-fi.tex", 2, 2),
-        ("French", "fr", &[], "Latn", "hyph-fr.tex", 2, 2),
-        ("Croatian", "hr", &[], "Latn", "hyph-hr.tex", 2, 2),
-        ("Hungarian", "hu", &[], "Latn", "hyph-hu.tex", 2, 2),
-        ("Icelandic", "is", &[], "Latn", "hyph-is.tex", 2, 2),
-        ("Italian", "it", &[], "Latn", "hyph-it.tex", 2, 2),
-        ("Georgian", "ka", &[], "Geor", "hyph-ka.tex", 1, 2),
-        ("Kurmanji", "ku", &[], "Latn", "hyph-kmr.tex", 2, 2),
-        ("Latin", "la", &[], "Latn", "hyph-la.tex", 2, 2),
-        ("Lithuanian", "lt", &[], "Latn", "hyph-lt.tex", 2, 2),
-        ("Mongolian", "mn", &[], "Cyrl", "hyph-mn.tex", 2, 2),
-        ("Dutch", "nl", &[], "Latn", "hyph-nl.tex", 2, 2),
-        ("Norwegian", "no", &["nb", "nn"], "Latn", "hyph-no.tex", 2, 2),
-        ("Polish", "pl", &[], "Latn", "hyph-pl.tex", 2, 2),
-        ("Portuguese", "pt", &[], "Latn", "hyph-pt.tex", 2, 3),
-        ("Russian", "ru", &[], "Cyrl", "hyph-ru.tex", 2, 2),
-        ("Serbian", "sr", &[], "Cyrl", "hyph-sh-cyrl.tex", 2, 2),
-        ("Slovak", "sk", &[], "Latn", "hyph-sk.tex", 2, 3),
-        ("Slovenian", "sl", &[], "Latn", "hyph-sl.tex", 2, 2),
-        ("Albanian", "sq", &[], "Latn", "hyph-sq.tex", 2, 2),
-        ("Swedish", "sv", &[], "Latn", "hyph-sv.tex", 2, 2),
-        ("Turkmen", "tk", &[], "Latn", "hyph-tk.tex", 2, 2),
-        ("Turkish", "tr", &[], "Latn", "hyph-tr.tex", 2, 2),
-        ("Ukrainian", "uk", &[], "Cyrl", "hyph-uk.tex", 2, 2),
-    ];
-
+    let mut languages: Vec<_> = LANGS
+        .into_iter()
+        .map(|(name, iso, isos, script, tex_file, lmin, rmin)| Language {
+            name,
+            feature: name.to_lowercase(),
+            iso,
+            aliases: isos.to_vec(),
+            isos: std::iter::once(&iso).chain(isos).copied().collect(),
+            script,
+            tex_file,
+            lmin,
+            rmin,
+        })
+        .collect();
     languages.sort();
 
     // Build the tries.
     let mut fresh = true;
-    for (_, iso, _, _, filename, ..) in languages {
-        let source = Path::new("patterns").join(filename);
+    for Language { iso, tex_file, .. } in &languages {
+        let source = Path::new("patterns").join(tex_file);
         let tex = fs::read_to_string(&source).unwrap();
         let trie = hypher::builder::build_trie(&tex);
         let path = format!("tries/{iso}.bin");
@@ -72,136 +99,121 @@ fn write_check(path: &str, data: Vec<u8>) -> bool {
     prev == data
 }
 
-fn write_lang(
-    w: &mut String,
-    languages: &[(&str, &str, &[&str], &str, &str, u8, u8)],
-) -> fmt::Result {
-    writeln!(w, "// This file is generated by tests/generate.rs")?;
-    writeln!(w, "// Do not edit by hand!")?;
+#[rustfmt::skip]
+fn write_lang(w: &mut String, languages: &[Language]) -> fmt::Result {
+    writeln!(w, r#"// This file is generated by tests/generate.rs"#)?;
+    writeln!(w, r#"// Do not edit by hand!"#)?;
     writeln!(w)?;
 
-    writeln!(w, "#[cfg(not(feature = \"dyn\"))]")?;
-    writeln!(w, "use core::marker::PhantomData;")?;
-    writeln!(w, "/// Not `pub`, thus not constructible.")?;
-    writeln!(w, "#[cfg(not(feature = \"dyn\"))]")?;
-    writeln!(w, "#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]")?;
-    writeln!(w, "struct Absurd<'a>(PhantomData<&'a ()>);")?;
+    // Some auxiliary definitions.
+    writeln!(w, r#"#[cfg(not(feature = "dyn"))]"#)?;
+    writeln!(w, r#"use core::marker::PhantomData;"#)?;
+    writeln!(w, r#"/// Not `pub`, thus not constructible."#)?;
+    writeln!(w, r#"#[cfg(not(feature = "dyn"))]"#)?;
+    writeln!(w, r#"#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]"#)?;
+    writeln!(w, r#"struct Absurd<'a>(PhantomData<&'a ()>);"#)?;
     writeln!(w)?;
 
-    writeln!(w, "/// A language you can hyphenate in.")?;
-    writeln!(w, "///")?;
-    writeln!(w, "/// Lists for each language also the ISO 639-1 two")?;
-    writeln!(w, "/// letter language code and the ISO 15924 four letter")?;
-    writeln!(w, "/// script code.")?;
-    writeln!(w, "#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]")?;
-    writeln!(w, "#[non_exhaustive]")?;
-    writeln!(w, "#[allow(private_interfaces)]")?;
-    writeln!(w, "pub enum Lang<'a> {{")?;
-
-    for &(name, iso, isos, script, ..) in languages {
-        let feature = name.to_lowercase();
-        write!(w, "    /// Hyphenation for _{name}._ (Code: `{iso}`, ")?;
-        for code in isos {
-            write!(w, "Alias: `{code}`, ")?;
-        }
-        writeln!(w, "Script, `{script}`, Feature: `{feature}`)")?;
-        write!(w, "    ")?;
-        write_cfg(w, &feature)?;
-        writeln!(w, "    {name},")?;
+    // Create the enum of all supported languages.
+    writeln!(w, r#"/// A language you can hyphenate in."#)?;
+    writeln!(w, r#"///"#)?;
+    writeln!(w, r#"/// Lists for each language also the ISO 639-1 two"#)?;
+    writeln!(w, r#"/// letter language code and the ISO 15924 four letter"#)?;
+    writeln!(w, r#"/// script code."#)?;
+    writeln!(w, r#"#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]"#)?;
+    writeln!(w, r#"#[non_exhaustive]"#)?;
+    writeln!(w, r#"#[allow(private_interfaces)]"#)?;
+    writeln!(w, r#"pub enum Lang<'a> {{"#)?;
+    for Language { name, feature, iso, aliases, script, .. } in languages {
+    let aliases = aliases.iter().map(|code| format!(" Alias: `{code}`,")).collect::<Vec<_>>().join("");
+    writeln!(w, r#"    /// Hyphenation for _{name}._ (Code: `{iso}`,{aliases} Script: `{script}`, Feature: `{feature}`)"#)?;
+    writeln!(w, r#"    #[cfg(feature = "{feature}")]"#)?;
+    writeln!(w, r#"    {name},"#)?;
     }
-
     // After the statically generated list of languages,
-    // we include the dynamically loaded one.
-    writeln!(w, "    /// Dynamically loaded patterns.")?;
-    writeln!(w, "    #[cfg(feature = \"dyn\")]")?;
-    writeln!(w, "    Dyn {{")?;
-    writeln!(w, "        /// See method `bounds`.")?;
-    writeln!(w, "        bounds: (usize, usize),")?;
-    writeln!(w, "        /// See method `root`.")?;
-    writeln!(w, "        bytes: &'a [u8],")?;
-    writeln!(w, "    }},")?;
-    writeln!(w, "    /// Cannot be constructed. Silences the unused lifetime warning.")?;
-    writeln!(w, "    #[cfg(not(feature = \"dyn\"))]")?;
-    writeln!(w, "    Absurd(Absurd<'a>),")?;
-
-    writeln!(w, "}}")?;
+    // we include the variant for a dynamically loaded trie.
+    writeln!(w, r#"    /// Dynamically loaded patterns."#)?;
+    writeln!(w, r#"    #[cfg(feature = "dyn")]"#)?;
+    writeln!(w, r#"    Dyn {{"#)?;
+    writeln!(w, r#"        /// See method `bounds`."#)?;
+    writeln!(w, r#"        bounds: (usize, usize),"#)?;
+    writeln!(w, r#"        /// See method `root`."#)?;
+    writeln!(w, r#"        bytes: &'a [u8],"#)?;
+    writeln!(w, r#"    }},"#)?;
+    writeln!(w, r#"    /// Cannot be constructed."#)?;
+    writeln!(w, r#"    /// Silences the unused lifetime warning."#)?;
+    writeln!(w, r#"    #[cfg(not(feature = "dyn"))]"#)?;
+    writeln!(w, r#"    Absurd(Absurd<'a>),"#)?;
+    writeln!(w, r#"}}"#)?;
     writeln!(w)?;
 
-    writeln!(w, "impl Lang<'static> {{")?;
+    // Implementation of `from_iso`, mapping a 2-letter iso code
+    // to the corresponding variant.
+    writeln!(w, r#"impl Lang<'static> {{"#)?;
+    writeln!(w, r#"    /// Select a language using its ISO 639-1 code."#)?;
+    writeln!(w, r#"    pub fn from_iso(code: [u8; 2]) -> Option<Self> {{"#)?;
+    writeln!(w, r#"        match &code {{"#)?;
+    for Language { name, feature, isos, .. } in languages {
+    for iso in isos {
+    writeln!(w, r#"            #[cfg(feature = "{feature}")]"#)?;
+    writeln!(w, r#"            b"{iso}" => Some(Self::{name}),"#)?;
+    }}
+    writeln!(w, r#"            _ => None,"#)?;
+    writeln!(w, r#"        }}"#)?;
+    writeln!(w, r#"    }}"#)?;
+    writeln!(w, r#"}}"#)?;
+    writeln!(w)?;
 
-    // Implementation of `from_iso`.
-    writeln!(w, "    /// Select a language using its ISO 639-1 code.")?;
-    writeln!(w, "    pub fn from_iso(code: [u8; 2]) -> Option<Self> {{")?;
-    writeln!(w, "        match &code {{")?;
-    for &(name, iso, isos, ..) in languages {
-        let feature = name.to_lowercase();
-        write!(w, "            ")?;
-        write_cfg(w, &feature)?;
-        writeln!(w, r#"            b"{iso}" => Some(Self::{name}),"#)?;
-        for code in isos {
-            write!(w, "            ")?;
-            write_cfg(w, &feature)?;
-            writeln!(w, r#"            b"{code}" => Some(Self::{name}),"#)?;
-        }
+    // Implementation of `from_bytes`, creating a dynamic language from raw data.
+    writeln!(w, r#"impl<'a> Lang<'a> {{"#)?;
+    writeln!(w, r#"    /// Dynamically load new patterns."#)?;
+    writeln!(w, r#"    /// No validation will occur here: if you provide a malformed"#)?;
+    writeln!(w, r#"    /// automata the program might panic when you try to use it."#)?;
+    writeln!(w, r#"    #[cfg(feature = "dyn")]"#)?;
+    writeln!(w, r#"    pub fn from_bytes("#)?;
+    writeln!(w, r#"        /// (left,right)-hyphenmin of the language."#)?;
+    writeln!(w, r#"        bounds: (usize, usize),"#)?;
+    writeln!(w, r#"        /// Pass to this the output of `hypher::builder::build_trie`"#)?;
+    writeln!(w, r#"        /// or an equivalently obtained well-formed trie."#)?;
+    writeln!(w, r#"        bytes: &'a [u8],"#)?;
+    writeln!(w, r#"    ) -> Self {{"#)?;
+    writeln!(w, r#"        Self::Dyn {{ bounds, bytes }}"#)?;
+    writeln!(w, r#"    }}"#)?;
+    writeln!(w)?;
+
+    // Implementation of `bounds`, get the (left,right)-hyphenmin for the language.
+    writeln!(w, r#"    /// The default number of chars to each side between"#)?;
+    writeln!(w, r#"    /// which breaking is forbidden."#)?;
+    writeln!(w, r#"    ///"#)?;
+    writeln!(w, r#"    /// This follows typographic conventions."#)?;
+    writeln!(w, r#"    pub fn bounds(self) -> (usize, usize) {{"#)?;
+    writeln!(w, r#"        match self {{"#)?;
+    for Language { name, feature, lmin, rmin, .. } in languages {
+    writeln!(w, r#"            #[cfg(feature = "{feature}")]"#)?;
+    writeln!(w, r#"            Self::{name} => ({lmin}, {rmin}),"#)?;
     }
-    writeln!(w, "            _ => None,")?;
-    writeln!(w, "        }}")?;
-    writeln!(w, "    }}")?;
-    writeln!(w, "}}")?;
+    writeln!(w, r#"            #[cfg(feature = "dyn")]"#)?;
+    writeln!(w, r#"            Self::Dyn {{ bounds, .. }} => bounds,"#)?;
+    writeln!(w, r#"            #[cfg(not(feature = "dyn"))]"#)?;
+    writeln!(w, r#"            Self::Absurd(_) => unreachable!(),"#)?;
+    writeln!(w, r#"        }}"#)?;
+    writeln!(w, r#"    }}"#)?;
     writeln!(w)?;
 
-    writeln!(w, "impl<'a> Lang<'a> {{")?;
-    // Implement dynamic loading
-    writeln!(w, "    /// Dynamically load new patterns.")?;
-    writeln!(w, "    #[cfg(feature = \"dyn\")]")?;
-    writeln!(
-        w,
-        "    pub fn from_bytes(bounds: (usize, usize), bytes: &'a [u8]) -> Self {{"
-    )?;
-    writeln!(w, "        Self::Dyn {{ bounds, bytes }}")?;
-    writeln!(w, "    }}")?;
-    writeln!(w)?;
-
-    // Implementation of `bounds`.
-    writeln!(w, "    /// The default number of chars to each side between")?;
-    writeln!(w, "    /// which breaking is forbidden.")?;
-    writeln!(w, "    ///")?;
-    writeln!(w, "    /// This follows typographic conventions.")?;
-    writeln!(w, "    pub fn bounds(self) -> (usize, usize) {{")?;
-    writeln!(w, "        match self {{")?;
-    for (name, .., lmin, rmin) in languages {
-        let feature = name.to_lowercase();
-        write!(w, "            ")?;
-        write_cfg(w, &feature)?;
-        writeln!(w, "            Self::{name} => ({lmin}, {rmin}),")?;
+    // Implementation of `root`, initializing the entry point of the automata.
+    writeln!(w, r#"    /// Entry point of the automata."#)?;
+    writeln!(w, r#"    fn root(self) -> State<'a> {{"#)?;
+    writeln!(w, r#"        match self {{"#)?;
+    for Language { name, feature, iso, .. } in languages {
+    writeln!(w, r#"            #[cfg(feature = "{feature}")]"#)?;
+    writeln!(w, r#"            Self::{name} => State::root(include_bytes!("../tries/{iso}.bin")),"#)?;
     }
-    writeln!(w, "            #[cfg(feature = \"dyn\")]")?;
-    writeln!(w, "            Self::Dyn {{ bounds, .. }} => bounds,")?;
-    writeln!(w, "            #[cfg(not(feature = \"dyn\"))]")?;
-    writeln!(w, "            Self::Absurd(_) => unreachable!(),")?;
-    writeln!(w, "        }}")?;
-    writeln!(w, "    }}")?;
-    writeln!(w)?;
-
-    // Implementation of `root`.
-    writeln!(w, "    fn root(self) -> State<'a> {{")?;
-    writeln!(w, "        match self {{")?;
-    for (name, iso, ..) in languages {
-        let feature = name.to_lowercase();
-        write!(w, "            ")?;
-        write_cfg(w, &feature)?;
-        write!(w, "            Self::{name} => State::root(")?;
-        writeln!(w, "include_bytes!(\"../tries/{iso}.bin\")),")?;
-    }
-    writeln!(w, "            #[cfg(feature = \"dyn\")]")?;
-    writeln!(w, "            Self::Dyn {{ bytes, .. }} => State::root(bytes),")?;
-    writeln!(w, "            #[cfg(not(feature = \"dyn\"))]")?;
-    writeln!(w, "            Self::Absurd(_) => unreachable!(),")?;
-    writeln!(w, "        }}")?;
-    writeln!(w, "    }}")?;
-    writeln!(w, "}}")
+    writeln!(w, r#"            #[cfg(feature = "dyn")]"#)?;
+    writeln!(w, r#"            Self::Dyn {{ bytes, .. }} => State::root(bytes),"#)?;
+    writeln!(w, r#"            #[cfg(not(feature = "dyn"))]"#)?;
+    writeln!(w, r#"            Self::Absurd(_) => unreachable!(),"#)?;
+    writeln!(w, r#"        }}"#)?;
+    writeln!(w, r#"    }}"#)?;
+    writeln!(w, r#"}}"#)
 }
 
-fn write_cfg(w: &mut String, feature: &str) -> fmt::Result {
-    writeln!(w, r#"#[cfg(feature = "{feature}")]"#)
-}
