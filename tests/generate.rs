@@ -3,6 +3,7 @@
 use std::fmt::{self, Write};
 use std::fs;
 use std::path::Path;
+use std::collections::HashMap;
 
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 struct Language {
@@ -17,7 +18,7 @@ struct Language {
     rmin: u8,
 }
 
-const LANGS: [(&str, &str, &[&str], &str, &str, u8, u8); 35] = [
+const LANGS: [(&str, &str, &[&str], &str, &str, u8, u8); 48] = [
     ("Afrikaans", "af", &[], "Latn", "hyph-af.tex", 1, 2),
     ("Albanian", "sq", &[], "Latn", "hyph-sq.tex", 2, 2),
     ("Assamese", "as", &[], "Beng", "hyph-as.tex", 2, 2),
@@ -204,6 +205,13 @@ fn write_lang(w: &mut String, languages: &[Language]) -> fmt::Result {
     for Language { name, feature, lmin, rmin, .. } in languages {
     writeln!(w, r#"            #[cfg(feature = "{feature}")]"#)?;
     writeln!(w, r#"            Self::{name} => ({lmin}, {rmin}),"#)?;
+    }
+    writeln!(w, r#"            #[cfg(feature = "dyn")]"#)?;
+    writeln!(w, r#"            Self::Dyn {{ bounds, .. }} => bounds,"#)?;
+    writeln!(w, r#"            #[cfg(not(feature = "dyn"))]"#)?;
+    writeln!(w, r#"            Self::Absurd(_) => unreachable!(),"#)?;
+    writeln!(w, r#"        }}"#)?;
+    writeln!(w, r#"    }}"#)?;
 
     // Implementation of `hyphenation_character`.
     writeln!(w, "    /// The default character used to join syllables.")?;
@@ -215,7 +223,7 @@ fn write_lang(w: &mut String, languages: &[Language]) -> fmt::Result {
     )?;
     writeln!(w, "    pub fn hyphenation_character(self) -> Option<char> {{")?;
     writeln!(w, "        match self {{")?;
-    for &(name, _, _, script, ..) in languages {
+    for &Language { name, script, .. } in languages {
         if !is_indic_script(script) {
             continue;
         }
@@ -227,24 +235,6 @@ fn write_lang(w: &mut String, languages: &[Language]) -> fmt::Result {
     writeln!(w, "            _ => Some('\\u{{ad}}'),")?;
     writeln!(w, "        }}")?;
     writeln!(w, "    }}")?;
-    writeln!(w)?;
-
-    // Implementation of `root`.
-    writeln!(w, "    fn root(self) -> State<'static> {{")?;
-    writeln!(w, "        match self {{")?;
-    for (name, iso, ..) in languages {
-        let feature = name.to_lowercase();
-        write!(w, "            ")?;
-        write_cfg(w, &feature)?;
-        write!(w, "            Self::{name} => State::root(")?;
-        writeln!(w, "include_bytes!(\"../tries/{iso}.bin\")),")?;
-    }
-    writeln!(w, r#"            #[cfg(feature = "dyn")]"#)?;
-    writeln!(w, r#"            Self::Dyn {{ bounds, .. }} => bounds,"#)?;
-    writeln!(w, r#"            #[cfg(not(feature = "dyn"))]"#)?;
-    writeln!(w, r#"            Self::Absurd(_) => unreachable!(),"#)?;
-    writeln!(w, r#"        }}"#)?;
-    writeln!(w, r#"    }}"#)?;
     writeln!(w)?;
 
     // Implementation of `root`, initializing the entry point of the automata.

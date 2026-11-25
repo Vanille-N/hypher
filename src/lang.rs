@@ -407,7 +407,6 @@ impl<'a> Lang<'a> {
             Self::Absurd(_) => unreachable!(),
         }
     }
-
     /// The default character used to join syllables.
     ///
     /// Returns `Some('\u{ad}')` (SOFT HYPHEN) for most languages, but `None`
