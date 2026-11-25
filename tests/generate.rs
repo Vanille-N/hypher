@@ -169,12 +169,12 @@ fn write_lang(w: &mut String, languages: &[Language]) -> fmt::Result {
     writeln!(w, r#"    /// Dynamically load new patterns."#)?;
     writeln!(w, r#"    /// No validation will occur here: if you provide a malformed"#)?;
     writeln!(w, r#"    /// automata the program might panic when you try to use it."#)?;
+    writeln!(w, r#"    /// - `bounds`: the (left,right)-hyphenmin of the language."#)?;
+    writeln!(w, r#"    /// - `bytes`: pass to this the output of `hypher::builder::build_trie`"#)?;
+    writeln!(w, r#"    ///   or an equivalently obtained well-formed trie."#)?;
     writeln!(w, r#"    #[cfg(feature = "dyn")]"#)?;
     writeln!(w, r#"    pub fn from_bytes("#)?;
-    writeln!(w, r#"        /// (left,right)-hyphenmin of the language."#)?;
     writeln!(w, r#"        bounds: (usize, usize),"#)?;
-    writeln!(w, r#"        /// Pass to this the output of `hypher::builder::build_trie`"#)?;
-    writeln!(w, r#"        /// or an equivalently obtained well-formed trie."#)?;
     writeln!(w, r#"        bytes: &'a [u8],"#)?;
     writeln!(w, r#"    ) -> Self {{"#)?;
     writeln!(w, r#"        Self::Dyn {{ bounds, bytes }}"#)?;

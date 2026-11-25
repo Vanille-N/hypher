@@ -223,12 +223,12 @@ impl<'a> Lang<'a> {
     /// Dynamically load new patterns.
     /// No validation will occur here: if you provide a malformed
     /// automata the program might panic when you try to use it.
+    /// - `bounds`: the (left,right)-hyphenmin of the language.
+    /// - `bytes`: pass to this the output of `hypher::builder::build_trie`
+    ///   or an equivalently obtained well-formed trie.
     #[cfg(feature = "dyn")]
     pub fn from_bytes(
-        /// (left,right)-hyphenmin of the language.
         bounds: (usize, usize),
-        /// Pass to this the output of `hypher::builder::build_trie`
-        /// or an equivalently obtained well-formed trie.
         bytes: &'a [u8],
     ) -> Self {
         Self::Dyn { bounds, bytes }
