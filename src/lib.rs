@@ -540,6 +540,23 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "finnish")]
+    fn test_finnish() {
+        // Compounds/words the old (Saarinen) patterns under-hyphenated by not
+        // breaking the i|o vowel sequence ("ää-nioi-keus", "yli-opis-to").
+        test(Finnish, "ää-ni-oi-keus");
+        test(Finnish, "yli-o-pis-to");
+        // CV boundaries break.
+        test(Finnish, "ra-vin-to-la");
+        test(Finnish, "kah-vi");
+        test(Finnish, "sa-na-kir-ja");
+        // Diphthongs (ai, uo, yö) and long vowels (aa) stay intact.
+        test(Finnish, "lai-va");
+        test(Finnish, "tie-to-ko-ne");
+        test(Finnish, "kaa-ri");
+    }
+
+    #[test]
     #[cfg(feature = "greek")]
     fn test_greek() {
         test(Greek, "δια-με-ρί-σμα-τα");
@@ -567,5 +584,19 @@ mod tests {
         test(Czech, "po-ví-dá-me");
         test(Czech, "nej-ja-s-něj-ší");
         test(Czech, "br-něn-ský");
+    }
+
+    #[test]
+    #[cfg(feature = "malayalam")]
+    fn test_malayalam() {
+        test(Malayalam, "വി-ദ്യാർ-ത്ഥി");
+        test(Malayalam, "പഠി-ക്കുക");
+    }
+
+    #[test]
+    #[cfg(feature = "hindi")]
+    fn test_hindi() {
+        test(Hindi, "वि-द्या-र्थी");
+        test(Hindi, "पढ़-ना");
     }
 }

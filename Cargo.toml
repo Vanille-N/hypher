@@ -1,6 +1,6 @@
 [package]
 name = "hypher"
-version = "0.1.6"
+version = "0.1.8"
 rust-version = "1.64" # also change in ci.yml
 authors = ["Laurenz <laurmaedje@gmail.com>"]
 edition = "2021"
@@ -23,6 +23,8 @@ alloc = []
 full = [
     "afrikaans",
     "albanian",
+    "assamese",
+    "bengali",
     "belarusian",
     "bulgarian",
     "catalan",
@@ -34,31 +36,44 @@ full = [
     "estonian",
     "finnish",
     "french",
+    "galician",
     "georgian",
     "german",
     "greek",
+    "gujarati",
+    "hindi",
     "hungarian",
     "icelandic",
     "italian",
+    "kannada",
     "kurmanji",
     "latin",
     "lithuanian",
+    "malayalam",
+    "marathi",
     "mongolian",
     "norwegian",
+    "oriya",
+    "panjabi",
     "polish",
     "portuguese",
     "russian",
+    "sanskrit",
     "serbian",
     "slovak",
     "slovenian",
     "spanish",
     "swedish",
+    "tamil",
+    "telugu",
     "turkish",
     "turkmen",
     "ukrainian",
 ]
 afrikaans = []
 albanian = []
+assamese = []
+bengali = []
 belarusian = []
 bulgarian = []
 catalan = []
@@ -70,25 +85,36 @@ english = []
 estonian = []
 finnish = []
 french = []
+galician = []
 georgian = []
 german = []
 greek = []
+gujarati = []
+hindi = []
 hungarian = []
 icelandic = []
 italian = []
+kannada = []
 kurmanji = []
 latin = []
 lithuanian = []
+malayalam = []
+marathi = []
 mongolian = []
 norwegian = []
+oriya = []
+panjabi = []
 polish = []
 portuguese = []
 russian = []
+sanskrit = []
 serbian = []
 slovak = []
 slovenian = []
 spanish = []
 swedish = []
+tamil = []
+telugu = []
 turkish = []
 turkmen = []
 ukrainian = []
